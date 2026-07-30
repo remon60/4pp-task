@@ -206,7 +206,6 @@ void CMy4pptaskDlg::OnBnClickedBtnLoad()
 
 void CMy4pptaskDlg::OnBnClickedBtnDataPush()
 {
-	// TODO: Add your control notification handler code here
 	if (m_pushIndex >= (int)m_loadedRows.size())
 	{
 		AfxMessageBox(_T("No more rows available."));

@@ -22,12 +22,5 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	BOOL m_bShowScanNo;
-	BOOL m_bShowPt;
-	BOOL m_bShowCurrent;
-	BOOL m_bShowThkness;
-	BOOL m_bShowTemp;
-	BOOL m_bShowLoadCell;
-	BOOL m_bShowResistance;
-	BOOL m_bShowTimestamp;
+	BOOL m_show[8];
 };

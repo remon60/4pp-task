@@ -2,24 +2,6 @@
 #include "DisplayList.h"
 #include "ColumnOptionsDlg.h"
 
-BEGIN_MESSAGE_MAP(CDisplayList, CListCtrl)
-    ON_WM_CONTEXTMENU()
-END_MESSAGE_MAP()
-
-BOOL CDisplayList::Init(CWnd* pParent, UINT placeholderID)
-{
-    CRect rect;
-    pParent->GetDlgItem(placeholderID)->GetWindowRect(&rect);
-    pParent->ScreenToClient(&rect);
-
-    if (!Create(WS_CHILD | WS_VISIBLE | WS_BORDER | LVS_REPORT, rect, pParent, IDC_LIST_JOBS))
-        return FALSE;
-
-    SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-    SetupColumns();
-    return TRUE;
-}
-
 CDisplayList::CDisplayList()
 {
     m_columns.push_back({ _T("Scan No"), 85, [](const Report& r) {
@@ -46,6 +28,24 @@ CDisplayList::CDisplayList()
     m_columns.push_back({ _T("Timestamp"), 130, [](const Report& r) {
         return r.scantimerstamp;
     } });
+}
+
+BEGIN_MESSAGE_MAP(CDisplayList, CListCtrl)
+    ON_WM_CONTEXTMENU()
+END_MESSAGE_MAP()
+
+BOOL CDisplayList::Init(CWnd* pParent, UINT placeholderID)
+{
+    CRect rect;
+    pParent->GetDlgItem(placeholderID)->GetWindowRect(&rect);
+    pParent->ScreenToClient(&rect);
+
+    if (!Create(WS_CHILD | WS_VISIBLE | WS_BORDER | LVS_REPORT, rect, pParent, IDC_LIST_JOBS))
+        return FALSE;
+
+    SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+    SetupColumns();
+    return TRUE;
 }
 
 void CDisplayList::SetupColumns()
@@ -111,26 +111,14 @@ void CDisplayList::Clear()
 void CDisplayList::OnContextMenu(CWnd* pWnd, CPoint point)
 {
     CColumnOptionsDlg dlg;
-    dlg.m_bShowScanNo = m_columns[0].visible;
-    dlg.m_bShowPt = m_columns[1].visible;
-    dlg.m_bShowCurrent = m_columns[2].visible;
-    dlg.m_bShowThkness = m_columns[3].visible;
-    dlg.m_bShowTemp = m_columns[4].visible;
-    dlg.m_bShowLoadCell = m_columns[5].visible;
-    dlg.m_bShowResistance = m_columns[6].visible;
-    dlg.m_bShowTimestamp = m_columns[7].visible;
+    for (size_t i = 0; i < m_columns.size(); i++)
+        dlg.m_show[i] = m_columns[i].visible;
 
     if (dlg.DoModal() != IDOK)
         return;
 
-    m_columns[0].visible = dlg.m_bShowScanNo;
-    m_columns[1].visible = dlg.m_bShowPt;
-    m_columns[2].visible = dlg.m_bShowCurrent;
-    m_columns[3].visible = dlg.m_bShowThkness;
-    m_columns[4].visible = dlg.m_bShowTemp;
-    m_columns[5].visible = dlg.m_bShowLoadCell;
-    m_columns[6].visible = dlg.m_bShowResistance;
-    m_columns[7].visible = dlg.m_bShowTimestamp;
+    for (size_t i = 0; i < m_columns.size(); i++)
+        m_columns[i].visible = dlg.m_show[i];
 
     SetupColumns();
     PopulateFrom(m_rows);
