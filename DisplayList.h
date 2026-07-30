@@ -50,11 +50,14 @@ public:
     BOOL Init(CWnd* pParent, UINT placeholderID);
     void SetupColumns();
     void PopulateFrom(const std::vector<Report>& rows);
+    void AppendOne(const Report& row);
+    void Clear();
 
 protected:
     afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 
 private:
+    void InsertRow(int itemIndex, const Report& row);
     std::vector<ColumnDef> m_columns;
     std::vector<Report> m_rows;
 };

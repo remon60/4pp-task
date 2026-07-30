@@ -66,31 +66,46 @@ void CDisplayList::SetupColumns()
     }
 }
 
+void CDisplayList::InsertRow(int itemIndex, const Report& row)
+{
+    int listCol = 0;
+    int idx = -1;
+    for (size_t c = 0; c < m_columns.size(); c++)
+    {
+        if (!m_columns[c].visible)
+            continue;
+
+        CString val = m_columns[c].getValue(row);
+        if (idx == -1)
+            idx = InsertItem(itemIndex, val);
+        else
+            SetItemText(idx, listCol, val);
+        listCol++;
+    }
+}
+
 void CDisplayList::PopulateFrom(const std::vector<Report>& rows)
 {
     m_rows = rows;
 
     DeleteAllItems();
 
-    for (size_t r = 0; r < rows.size(); r++)
+    for (size_t r = 0; r < m_rows.size(); r++)
     {
-        const Report& row = rows[r];
-
-        int listCol = 0;
-        int idx = -1;
-        for (size_t c = 0; c < m_columns.size(); c++)
-        {
-            if (!m_columns[c].visible)
-                continue;
-
-            CString val = m_columns[c].getValue(row);
-            if (idx == -1)
-                idx = InsertItem((int)r, val);
-            else
-                SetItemText(idx, listCol, val);
-            listCol++;
-        }
+        InsertRow((int)r, m_rows[r]);
     }
+}
+
+void CDisplayList::AppendOne(const Report& row)
+{
+    m_rows.push_back(row);
+    InsertRow(GetItemCount(), row);
+}
+
+void CDisplayList::Clear()
+{
+    DeleteAllItems();
+    m_rows.clear();
 }
 
 void CDisplayList::OnContextMenu(CWnd* pWnd, CPoint point)

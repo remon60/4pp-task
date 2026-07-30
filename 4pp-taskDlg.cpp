@@ -66,6 +66,7 @@ BEGIN_MESSAGE_MAP(CMy4pptaskDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BTN_LOAD, &CMy4pptaskDlg::OnBnClickedBtnLoad)
+	ON_BN_CLICKED(IDC_BTN_DATA_PUSH, &CMy4pptaskDlg::OnBnClickedBtnDataPush)
 END_MESSAGE_MAP()
 
 
@@ -196,5 +197,22 @@ void CMy4pptaskDlg::OnBnClickedBtnLoad()
 	ar.Close();
 	file.Close();
 
-	m_ListJobs.PopulateFrom(rows);
+	// m_ListJobs.PopulateFrom(rows);
+
+	m_loadedRows = rows;
+	m_pushIndex = 0;
+	m_ListJobs.Clear();
+}
+
+void CMy4pptaskDlg::OnBnClickedBtnDataPush()
+{
+	// TODO: Add your control notification handler code here
+	if (m_pushIndex >= (int)m_loadedRows.size())
+	{
+		AfxMessageBox(_T("No more rows available."));
+		return;
+	}
+
+	m_ListJobs.AppendOne(m_loadedRows[m_pushIndex]);
+	m_pushIndex++;
 }

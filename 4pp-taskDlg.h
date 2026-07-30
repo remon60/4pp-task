@@ -36,4 +36,8 @@ protected:
 public:
 	CDisplayList m_ListJobs;
 	afx_msg void OnBnClickedBtnLoad();
+	afx_msg void OnBnClickedBtnDataPush();
+
+	std::vector<Report> m_loadedRows;
+	int m_pushIndex = 0;
 };
