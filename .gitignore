@@ -1,0 +1,45 @@
+# Build directories
+Debug/
+Release/
+x64/
+x86/
+Win32/
+ipch/
+*.dir/
+
+# Visual Studio files
+.vs/
+*.vcxproj.user
+*.vcxproj.filters
+*.sdf
+*.opensdf
+*.suo
+*.user
+*.sln.docstates
+*.VC.db
+*.VC.VC.opendb
+
+# Precompiled headers / object files
+*.obj
+*.pch
+*.idb
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.res
+*.tlog
+*.log
+
+# Executables
+*.exe
+*.dll
+
+# MFC generated
+*.aps
+*.ncb
+Resource.h.bak
+
+# ClearCase / misc
+*.bak
+*.tmp
