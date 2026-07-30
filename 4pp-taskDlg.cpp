@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CMy4pptaskDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BTN_LOAD, &CMy4pptaskDlg::OnBnClickedBtnLoad)
 END_MESSAGE_MAP()
 
 
@@ -74,6 +75,7 @@ BOOL CMy4pptaskDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	m_ListJobs.Init(this, IDC_LIST_JOBS_GB);
 	// Add "About..." menu item to system menu.
 
 	// IDM_ABOUTBOX must be in the system command range.
@@ -153,3 +155,46 @@ HCURSOR CMy4pptaskDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CMy4pptaskDlg::OnBnClickedBtnLoad()
+{
+	CFileDialog dlg(TRUE, _T("fpu"), NULL,
+		OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
+		_T("FPU Files (*.fpu)|*.fpu|All Files (*.*)|*.*||"));
+
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CFile file;
+	if (!file.Open(dlg.GetPathName(), CFile::modeRead | CFile::typeBinary))
+	{
+		AfxMessageBox(_T("Failed to open file."));
+		return;
+	}
+
+	CArchive ar(&file, CArchive::load);
+	std::vector<Report> rows;
+
+	try
+	{
+		INT_PTR count = 0;
+		ar >> count;
+		for (INT_PTR i = 0; i < count; i++)
+		{
+			Report row;
+			row.Serialize(ar);
+			rows.push_back(row);
+		}
+	}
+	catch (CException* e)
+	{
+		e->Delete();
+		AfxMessageBox(_T("Failed to read file."));
+		return;
+	}
+
+	ar.Close();
+	file.Close();
+
+	m_ListJobs.PopulateFrom(rows);
+}

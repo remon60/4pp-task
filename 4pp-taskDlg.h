@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "DisplayList.h"
 
 // CMy4pptaskDlg dialog
 class CMy4pptaskDlg : public CDialogEx
@@ -31,4 +32,8 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+public:
+	CDisplayList m_ListJobs;
+	afx_msg void OnBnClickedBtnLoad();
 };
