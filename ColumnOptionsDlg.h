@@ -18,9 +18,10 @@ public:
 #endif
 
 protected:
+	virtual BOOL OnInitDialog();
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
 	DECLARE_MESSAGE_MAP()
 public:
 	BOOL m_show[8];
+	BOOL m_locked[8];
 };

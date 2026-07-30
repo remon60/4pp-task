@@ -6,10 +6,10 @@ CDisplayList::CDisplayList()
 {
     m_columns.push_back({ _T("Scan No"), 85, [](const Report& r) {
         CString s; s.Format(_T("%d.%d.%d.%d"), r.slot, r.scan, r.repeat, r.point); return s;
-    } });
+    }, true, true });
     m_columns.push_back({ _T("Pt(Xmm,T°)"), 95, [](const Report& r) {
         CString s; s.Format(_T("%.3f, %.3f"), r.x, r.y); return s;
-    } });
+    }, true, true });
     m_columns.push_back({ _T("Current(mA)"), 80, [](const Report& r) {
         CString s; s.Format(_T("%.3f"), r.msr_curr); return s;
     } });
@@ -112,13 +112,19 @@ void CDisplayList::OnContextMenu(CWnd* pWnd, CPoint point)
 {
     CColumnOptionsDlg dlg;
     for (size_t i = 0; i < m_columns.size(); i++)
+    {
         dlg.m_show[i] = m_columns[i].visible;
+        dlg.m_locked[i] = m_columns[i].locked;
+    }
 
     if (dlg.DoModal() != IDOK)
         return;
 
     for (size_t i = 0; i < m_columns.size(); i++)
-        m_columns[i].visible = dlg.m_show[i];
+    {
+        if (!m_columns[i].locked)
+            m_columns[i].visible = dlg.m_show[i];
+    }
 
     SetupColumns();
     PopulateFrom(m_rows);

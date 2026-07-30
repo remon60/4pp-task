@@ -14,12 +14,31 @@ IMPLEMENT_DYNAMIC(CColumnOptionsDlg, CDialogEx)
 CColumnOptionsDlg::CColumnOptionsDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_COLUMN_OPTIONS, pParent)
 	, m_show{}
+	, m_locked{}
 {
 
 }
 
 CColumnOptionsDlg::~CColumnOptionsDlg()
 {
+}
+
+BOOL CColumnOptionsDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	static const UINT ids[8] = {
+		IDC_CHK_SCANNO, IDC_CHK_PT, IDC_CHK_CURRENT, IDC_CHK_THKNESS,
+		IDC_CHK_TEMP, IDC_CHK_LOADCELL, IDC_CHK_RESISTANCE, IDC_CHK_TIMESTAMP
+	};
+
+	for (int i = 0; i < 8; i++)
+	{
+		if (m_locked[i])
+			GetDlgItem(ids[i])->EnableWindow(FALSE);
+	}
+
+	return TRUE;
 }
 
 void CColumnOptionsDlg::DoDataExchange(CDataExchange* pDX)

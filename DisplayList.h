@@ -37,6 +37,7 @@ struct ColumnDef {
     int width;
     std::function<CString(const Report&)> getValue;
     bool visible = true;
+    bool locked = false;
 };
 
 class CDisplayList : public CListCtrl
